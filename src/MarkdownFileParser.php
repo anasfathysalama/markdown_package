@@ -4,6 +4,7 @@ namespace Anas\Markdown;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class MarkdownFileParser
 {
@@ -61,11 +62,11 @@ class MarkdownFileParser
 
     protected function processDateFields()
     {
+
         foreach ($this->fileData as $field => $value) {
-            if ($field === "date") {
-                $this->fileData[$field] = Carbon::parse($value);
-            } elseif ($field === "body") {
-                $this->fileData['body'] = MarkdownParser::parse($value);
+            $class = "Anas\\Markdown\\Fields\\" . Str::title($field);
+            if (class_exists($class) && method_exists($class, 'process')) {
+                $this->fileData = array_merge($this->fileData, $class::process($field, $value));
             }
         }
     }
