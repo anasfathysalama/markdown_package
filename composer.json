@@ -1,0 +1,14 @@
+{
+    "name": "anas_markdown/markdown",
+    "description": "an package for creating markdown",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "anas salama",
+            "email": "salamaanas681@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^6.25"
+    }
+}
