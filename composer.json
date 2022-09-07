@@ -1,14 +1,27 @@
 {
-    "name": "anas_markdown/markdown",
-    "description": "an package for creating markdown",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "anas salama",
-            "email": "salamaanas681@gmail.com"
-        }
-    ],
-    "require-dev": {
-        "orchestra/testbench": "^6.25"
+  "name": "anas_markdown/markdown",
+  "description": "an package for creating markdown",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "anas salama",
+      "email": "salamaanas681@gmail.com"
     }
+  ],
+  "require": {
+    "erusev/parsedown": "^1.7"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^6.25"
+  },
+  "autoload": {
+    "psr-4": {
+      "Anas\\Markdown\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Anas\\Markdown\\Tests\\": "tests/"
+    }
+  }
 }
