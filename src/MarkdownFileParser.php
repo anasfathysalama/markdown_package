@@ -11,6 +11,7 @@ class MarkdownFileParser
 
     protected $filePath;
     protected $fileData;
+    protected $rawData;
 
     public function __construct($filePath)
     {
@@ -25,18 +26,23 @@ class MarkdownFileParser
         return $this->fileData;
     }
 
+    public function getRawData()
+    {
+        return $this->rawData;
+    }
+
     protected function extractFileData()
     {
         preg_match(
             '/^\-{3}(.*?)\-{3}(.*)/s',
             $this->getContent(),
-            $this->fileData
+            $this->rawData
         );
     }
 
     protected function explodeHeadDataFromFile()
     {
-        $stringFields = explode("\n", trim($this->fileData[1]));
+        $stringFields = explode("\n", trim($this->rawData[1]));
         foreach ($stringFields as $stringField) {
             preg_match('/(.*)\s?:\s?(.*)/', $stringField, $fieldArray);
             $this->fileData[trim($fieldArray[1])] = trim($fieldArray[2]);
@@ -49,7 +55,7 @@ class MarkdownFileParser
      */
     private function removeCarriageCharacterFromBody()
     {
-        return preg_replace("/\r/", "", trim($this->fileData[2]));
+        return preg_replace("/\r/", "", trim($this->rawData[2]));
     }
 
     /**
@@ -62,12 +68,12 @@ class MarkdownFileParser
 
     protected function processDateFields()
     {
-
         foreach ($this->fileData as $field => $value) {
             $class = "Anas\\Markdown\\Fields\\" . Str::title($field);
-            if (class_exists($class) && method_exists($class, 'process')) {
-                $this->fileData = array_merge($this->fileData, $class::process($field, $value));
+            if (!class_exists($class) && !method_exists($class, 'process')) {
+                $class = "Anas\\Markdown\\Fields\\Extra" ;
             }
+            $this->fileData = array_merge($this->fileData, $class::process($field, $value , $this->fileData));
         }
     }
 

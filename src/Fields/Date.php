@@ -7,7 +7,7 @@ use Carbon\Carbon;
 class Date implements AbstractField
 {
 
-    public static function process($field, $value)
+    public static function process($field, $value , $data)
     {
         return [
             $field => Carbon::parse($value)

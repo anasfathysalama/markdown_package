@@ -4,7 +4,7 @@ namespace Anas\Markdown\Tests\Feature;
 
 use Anas\Markdown\MarkdownFileParser;
 use Carbon\Carbon;
-use Orchestra\Testbench\TestCase;
+use Anas\Markdown\Tests\TestCase;
 
 class MarkdownFileParserTest extends TestCase
 {
@@ -15,7 +15,7 @@ class MarkdownFileParserTest extends TestCase
 
         $markdownFileParser = new MarkdownFileParser( __DIR__ . '/../blog/blog_test.md' );
 
-        $data = $markdownFileParser->getFileData();
+        $data = $markdownFileParser->getRawData();
 
         $this->assertStringContainsString("title: blog title" , $data[1]);
         $this->assertStringContainsString('description: blog description' , $data[1]);
@@ -27,7 +27,7 @@ class MarkdownFileParserTest extends TestCase
     {
         $markdownFileParser = new MarkdownFileParser( "---\ntitle: blog title\n---\nBlog body here" );
 
-        $data = $markdownFileParser->getFileData();
+        $data = $markdownFileParser->getRawData();
         $this->assertStringContainsString("title: blog title" , $data[1]);
         $this->assertStringContainsString('Blog body here' , $data[2]);
     }
@@ -62,5 +62,25 @@ class MarkdownFileParserTest extends TestCase
 
         $this->assertInstanceOf(Carbon::class , $data['date']);
         $this->assertEquals('16-05-1996' , $data['date']->format('d-m-Y'));
+    }
+
+    /** @test */
+    public function the_extra_field_has_been_parsed()
+    {
+        $markdownFileParser = new MarkdownFileParser("---\nauthor: John Doe\n---\n");
+
+        $data = $markdownFileParser->getFileData();
+
+        $this->assertEquals(json_encode(['author' => 'John Doe']) , $data['extra']);
+    }
+
+    /** @test */
+    public function an_additional_fields_has_been_parsed()
+    {
+        $markdownFileParser = new MarkdownFileParser("---\nauthor: John Doe\nimage: url/image.jpg\n---\n");
+
+        $data = $markdownFileParser->getFileData();
+
+        $this->assertEquals(json_encode(['author' => 'John Doe' , 'image'=>'url/image.jpg']) , $data['extra']);
     }
 }

@@ -3,7 +3,7 @@
 namespace Anas\Markdown\Tests\Feature;
 
 use Anas\Markdown\MarkdownParser;
-use Orchestra\Testbench\TestCase;
+use Anas\Markdown\Tests\TestCase;
 
 class MarkdownTest extends TestCase
 {
